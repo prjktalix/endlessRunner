@@ -18,7 +18,7 @@ let config = {
             }
         }
     },
-    scene: [Load]
+    scene: [Load, Title]
 }
 
 //define game 
