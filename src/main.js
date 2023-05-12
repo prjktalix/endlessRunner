@@ -3,10 +3,10 @@
 let config = {
     parent: "myGame",
     type: Phaser.AUTO,
-    width: 640,
-    height: 960,
+    height: 320,
+    width: 960,
     scale:{
-        autoCenter: Phaser.scale.CENTER_BOTH
+        autoCenter: Phaser.Scale.CENTER_BOTH
     },
     physics:{
         default: 'arcade',
@@ -17,7 +17,8 @@ let config = {
                 y: 0
             }
         }
-    }
+    },
+    scene: [Load]
 }
 
 //define game 
