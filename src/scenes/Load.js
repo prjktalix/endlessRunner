@@ -10,19 +10,21 @@ class Load extends Phaser.Scene {
             loadingBar.fillStyle(0xFFFFFF, 1);              // color, alpha
             loadingBar.fillRect(0, centerY, w * value, 5);  // (x, y, w, h)
         });
-    this.load.on('complete', () =>{
-        loadingBar.destroy();
-    });
+        this.load.on('complete', () =>{
+            loadingBar.destroy();
+        });
 
-    this.load.path = "./assets/";
-    
-    // load graphics assets
-    this.load.image('player', 'img/examplePlayer.png');
-    this.load.image('tile', 'img/exampleTile.png');
-    this.load.image('box', 'img/exampleBox.png');
-
-    // load font
-    this.load.bitmapFont('exampleFont', './font/gem.png', './font/gem.xml');
+        this.load.path = "./assets/";
+        
+        // load graphics assets
+        this.load.image('tile', 'img/exampleTile.png');
+        this.load.image('box', 'img/exampleBox.png');
+        this.load.spritesheet('player', 'img/examplePlayer.png', {
+            frameWidth: 88,
+            frameHeight: 94
+        });
+        // load font
+        this.load.bitmapFont('exampleFont', './font/gem.png', './font/gem.xml');
     }
     
     create(){
@@ -34,6 +36,6 @@ class Load extends Phaser.Scene {
         }
 
         // go to Title Scene
-        this.scene.start('titleScene');
+        this.scene.start('playScene');
     }
-}
+} 

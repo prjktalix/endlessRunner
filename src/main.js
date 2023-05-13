@@ -3,11 +3,13 @@
 let config = {
     parent: "myGame",
     type: Phaser.AUTO,
-    height: 320,
-    width: 960,
+    height: 340,
+    width: 1000,
     scale:{
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
+    pixelArt: true,
+    transparent: true,
     physics:{
         default: 'arcade',
         arcade:{
@@ -18,7 +20,7 @@ let config = {
             }
         }
     },
-    scene: [Load, Title]
+    scene: [Load, Title, Play, GameOver]
 }
 
 //define game 
