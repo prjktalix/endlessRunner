@@ -12,6 +12,9 @@ class Title extends Phaser.Scene {
 		this.add.bitmapText(centerX, centerY + textSpacer * 1.5, 'exampleFont', 'Press SPACE to start', 36).setOrigin(0.5);
         this.add.bitmapText(centerX, centerY + textSpacer * 2, 'exampleFont', 'Brian Camilo 2023', 16).setOrigin(0.5);
 
+		
+        this.add.bitmapText(centerX, centerY + textSpacer * 2.5, 'exampleFont', 'Credits to PixaBay for ingame music. All artwork is designed by me with the use of Slate application', 10).setOrigin(0.5);
+
 		// set up cursor keys
 		cursors = this.input.keyboard.createCursorKeys();  
 	}

@@ -76,6 +76,7 @@ class Play extends Phaser.Scene{
 			this.respawnTime = 0;
 			this.gameSpeed = 0;
 			this.score = 0;
+			this.player.setAccelerationX(0);
 			this.gameOverText.setAlpha(1);
 			this.restart.setAlpha(1);
 			this.hitSound.play();
@@ -84,7 +85,7 @@ class Play extends Phaser.Scene{
 	}
 	isScore(){
 		this.time.addEvent({
-			delay: 100,
+			delay: 150,
 			loop: true,
 			callback: () => {
 				if(!this.isRunning) {
@@ -92,8 +93,8 @@ class Play extends Phaser.Scene{
 				this.score++;				// increment the score
 				this.gameSpeed += 0.001;	// slwoly increase the gamespeed
 
-				// make sound if reach to 500
-				if (this.score % 500 == 0){
+				// make sound if reach to 50
+				if (this.score % 50 == 0){
 					this.coinSound.play();
 				}
 
