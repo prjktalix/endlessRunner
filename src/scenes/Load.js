@@ -21,6 +21,7 @@ class Load extends Phaser.Scene {
         this.load.image('box', 'img/exampleBox.png');
         this.load.image('player', 'img/examplePlayer2.png');
         this.load.image('playerDead', 'img/examplePlayerDead.png');
+        this.load.image('cloud', 'img/cloud.png');
 
 
         this.load.spritesheet('playerRun', 'img/examplePlayer.png', {
@@ -44,6 +45,11 @@ class Load extends Phaser.Scene {
         this.load.image('obstacle-4', 'img/exampleCactuses_big_1.png');
         this.load.image('obstacle-5', 'img/exampleCactuses_big_2.png');
         this.load.image('obstacle-6', 'img/exampleCactuses_big_3.png');
+
+        // load audio assets
+        this.load.audio('hit', 'audio/hit.mp3');
+        this.load.audio('coin', 'audio/coin.mp3');
+        this.load.audio('jump', 'audio/jump.mp3');
 
 
         // load font

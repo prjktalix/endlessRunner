@@ -27,6 +27,14 @@ class Play extends Phaser.Scene{
 		this.scoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
 		this.highScoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
 
+		
+		this.addCloud = this.add.group();
+		this.addCloud.addMultiple([
+			this.add.image(width / 2, 170, 'cloud'),
+			this.add.image(width - 80, 80, 'cloud'),
+			this.add.image((width / 1.3), 100, 'cloud')
+		]);
+
 		this.obstacles = this.physics.add.group();
 		this.initAnims(); 
 		this.initCollider();
@@ -166,6 +174,7 @@ class Play extends Phaser.Scene{
 		this.ground.tilePositionX += this.gameSpeed;
 		this.isInput();
 		Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
+		Phaser.Actions.IncX(this.addCloud.getChildren(), -0.8);
 
 		this.respawnTime += 50 * this.gameSpeed * 0.08;
 		if(this.respawnTime >= 1500) {
@@ -177,6 +186,13 @@ class Play extends Phaser.Scene{
 		this.obstacles.getChildren().forEach(obstacle => {
 			if (obstacle.getBounds().right < 0) {
 			  this.obstacles.killAndHide(obstacle);
+			}
+		});
+
+		// destroy obstacles if out of bounce
+		this.addCloud.getChildren().forEach(clouds => {
+			if (clouds.getBounds().right < 0) {
+				clouds.x = this.game.config.width + 30;
 			}
 		})
 
