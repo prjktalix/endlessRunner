@@ -55,6 +55,6 @@ class Load extends Phaser.Scene {
     
     create(){
         // go to Title Scene
-        this.scene.start('playScene');
+        this.scene.start('titleScene');
     }
 } 

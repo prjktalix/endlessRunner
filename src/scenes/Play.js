@@ -4,20 +4,20 @@ class Play extends Phaser.Scene{
 	}
 
 	create(){
-		const {height, width} = this.game.config;
 		this.gameSpeed = 2;
 		this.respawnTime = 0;
 		this.isRunning = false;
 		this.score = 0;
 
-		this.jumpSound = this.sound.add('jump', {volume: 0.2});
-		this.coinSound = this.sound.add('coin', {volume: 0.2});
-		this.hitSound = this.sound.add('hit', {volume: 0.2});
+		// added sfx
+		this.jumpSound = this.sound.add('jump', {volume: 0.3});
+		this.coinSound = this.sound.add('coin', {volume: 0.3});
+		this.hitSound = this.sound.add('hit', {volume: 0.3});
 
 		// set up audio, play bgm
 		this.bgm = this.sound.add('background', { 
 			mute: false,
-			volume: 0.2,
+			volume: 0.3,
 			rate: 1,
 			loop: true 
 		});
@@ -25,7 +25,7 @@ class Play extends Phaser.Scene{
 	
 
 		// create tile ground
-		this.ground = this.add.tileSprite(0, height, width, 26, 'mySprite', 'tile').setOrigin(0, 1);		
+		this.ground = this.add.tileSprite(0, game.config.height, game.config.width, 26, 'mySprite', 'tile').setOrigin(0, 1);		
 
 		this.player = this.physics.add.sprite(0, 0, 'mySprite', 'playerIdle');
 		this.player.setCollideWorldBounds(true);
@@ -42,17 +42,17 @@ class Play extends Phaser.Scene{
 		this.scoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
 		this.highScoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
 
-		
+		// added clouds
 		this.addCloud = this.add.group();
 		this.addCloud.addMultiple([
-			this.add.image(width / 2, 170, 'mySprite', 'cloud'),
-			this.add.image(width - 80, 80, 'mySprite', 'cloud'),
-			this.add.image((width / 1.3), 100, 'mySprite', 'cloud')
+			this.add.image(game.config.width / 2, 170, 'mySprite', 'cloud'),
+			this.add.image(game.config.width - 80, 80, 'mySprite', 'cloud'),
+			this.add.image((game.config.width / 1.3), 100, 'mySprite', 'cloud')
 		]);
 
 		this.obstacles = this.physics.add.group();
-		this.initAnims(); 
-		this.initCollider();
+		this.isAnimated(); 
+		this.isCollide();
 		this.isScore();
 		this.isOutOfBounce();
 		this.isRunningAnim();
@@ -60,120 +60,7 @@ class Play extends Phaser.Scene{
 
 		cursors = this.input.keyboard.createCursorKeys();  
 	}
-
-	isScore(){
-		this.time.addEvent({
-			delay: 1000 / 10,
-			loop: true,
-			callbackScope: this,
-			callback: () => {
-				if(!this.isRunning) {return;}
-				this.score++;
-				this.gameSpeed += 0.01;
-
-				if (this.score % 100 === 0){
-					this.coinSound.play();
-				}
-
-				const score = Array.from(String(this.score), Number);
-				for(let i = 0; i < 5 - String(this.score).length; i++){
-					score.unshift(0);
-				}
-
-				this.scoreText.setText(score.join(''));
-			}
-		})
-	}
-	
-	// player movement
-	isInput(){
-
-		this.restart.on('pointerdown', () => {
-			this.player.setVelocityY(0);
-			this.player.body.height = 65;
-			this.player.body.offset.y = 0;
-			this.physics.resume();
-			this.obstacles.clear(true, true);
-			this.isRunning = true;
-			this.gameOverText.setAlpha(0);
-			this.restart.setAlpha(0);
-
-			this.gameSpeed = 2;
-			
-			this.anims.resumeAll();
-		  });
-
-		if(Phaser.Input.Keyboard.JustDown(cursors.space)){
-			if(!this.player.body.onFloor()){return;}
-			this.player.body.height = 65;
-			this.player.body.offset.y = 0;
-			this.jumpSound.play();
-			this.player.setVelocityY(-1600);
-		}
-		if(Phaser.Input.Keyboard.JustDown(cursors.down)){
-			if(!this.player.body.onFloor() || !this.isRunning){return;}
-
-			this.player.body.height = 29;
-			this.player.body.offset.y = 34;
-		}
-
-		if(Phaser.Input.Keyboard.JustUp(cursors.down)){
-			this.player.body.height = 65;
-			this.player.body.offset.y = 0;
-		}
-		
-	}
-
-	placeObstacle(){
-		const {height, width} = this.game.config;
-
-		const obstacleObj = Math.floor(Math.random() * 7) + 1;
-		const distance = Phaser.Math.Between(600, 900);
-		let obstacle;
-
-		if(obstacleObj > 6){
-			const enemyHeight = [22, 50]
-			obstacle = this.obstacles.create(width + distance, height - enemyHeight[Math.floor(Math.random() * 2)], 'enemybird');
-			obstacle.play('enemy-bird', 1);
-			obstacle.body.height = obstacle.body.height / 1.5;
-		} else {
-			obstacle = this.obstacles.create(width + distance, height, `obstacle-${obstacleObj}`);
-			obstacle.body.offset.y = +10;
-		}
-		obstacle.setOrigin(0, 1);
-		obstacle.setImmovable();
-
-		
-	}
-
-	initAnims(){
-
-		this.anims.create({
-			key: 'player-kneel',
-			frames: this.anims.generateFrameNumbers('playerRun', {start: 0, end: 1}),
-			frameRate: 2,
-			repeat: -1
-		});
-		
-		this.anims.create({
-			key: 'player-run',
-			frames: this.anims.generateFrameNumbers('playerRun', {start: 0, end: 1}),
-			frameRate: 10,
-			repeat: -1
-		});
-
-		
-
-		this.anims.create({
-			key: 'enemy-bird',
-			frames: this.anims.generateFrameNumbers('enemyBird', {start: 0, end: 1}),
-			frameRate: 6,
-			repeat: -1
-		});
-	  
-	}
-
-	initCollider(){
+	isCollide(){
 		this.physics.add.collider(this.player, this.obstacles, () =>{
 			
 			// show high score
@@ -195,6 +82,144 @@ class Play extends Phaser.Scene{
 		},null, this);
 		
 	}
+	isScore(){
+		this.time.addEvent({
+			delay: 100,
+			loop: true,
+			callback: () => {
+				if(!this.isRunning) {
+					return;}
+				this.score++;				// increment the score
+				this.gameSpeed += 0.001;	// slwoly increase the gamespeed
+
+				// make sound if reach to 100
+				if (this.score % 100 == 0){
+					this.coinSound.play();
+				}
+
+				// shift the 0s
+				const score = Array.from(String(this.score), Number);
+				for(let i = 0; i < 5 - String(this.score).length; i++){
+					score.unshift(0);
+				}
+
+				this.scoreText.setText(score.join(''));
+			}
+		})
+	}
+	
+	// user input
+	isInput(){
+		// restart button
+		this.restart.on('pointerdown', () => {
+			this.player.setVelocityY(0);
+			this.player.body.height = 65;
+			this.player.body.offset.y = 0;
+			this.player.setX(0);
+			this.physics.resume();
+			this.obstacles.clear(true, true);
+			this.isRunning = true;
+			this.gameOverText.setAlpha(0);
+			this.restart.setAlpha(0);
+			this.gameSpeed = 2;
+			
+			this.anims.resumeAll();
+		  });
+
+		// player jump
+		if(Phaser.Input.Keyboard.JustDown(cursors.space)){
+			if(!this.player.body.onFloor()){return;}
+			this.player.body.height = 65;
+			this.jumpSound.play();
+			this.player.setVelocityY(-1600);
+		}
+		
+		// player move right
+		if(Phaser.Input.Keyboard.JustDown(cursors.right)){
+			this.player.setAccelerationX(500);
+		}
+
+		if(Phaser.Input.Keyboard.JustUp(cursors.right)){
+			this.player.setAccelerationX(0);
+		}
+
+		// player move left
+		if(Phaser.Input.Keyboard.JustDown(cursors.left)){
+			this.player.setAccelerationX(-500);
+		}
+
+		if(Phaser.Input.Keyboard.JustUp(cursors.left)){
+			this.player.setAccelerationX(0);
+		}
+		// player ducked
+		if(Phaser.Input.Keyboard.JustDown(cursors.down)){
+			if(!this.player.body.onFloor() || !this.isRunning){return;}
+
+			this.player.body.height = 29;
+			this.player.body.offset.y = 34;
+		}
+
+		if(Phaser.Input.Keyboard.JustUp(cursors.down)){
+			this.player.body.height = 65;
+			this.player.body.offset.y = 0;
+		}
+		
+	}
+
+
+	// produce enemy obstacles
+	objects(){
+		// random object flower/trees
+		const obstacleObj = Math.floor(Math.random() * 7) + 1;
+		const distance = Phaser.Math.Between(600, 900);
+		let obstacle;
+
+		if(obstacleObj > 6){
+			const enemyHeight = [22, 50]
+			obstacle = this.obstacles.create(game.config.width + distance, game.config.height - enemyHeight[Math.floor(Math.random() * 2)], 'enemybird');
+			obstacle.play('enemy-bird', 1);
+			obstacle.body.height = obstacle.body.height / 1.5;
+		} else {
+			obstacle = this.obstacles.create(game.config.width + distance, game.config.height, `obstacle-${obstacleObj}`);
+			obstacle.body.offset.y = +10;
+		}
+		obstacle.setOrigin(0, 1);
+		obstacle.setImmovable();
+
+		
+	}
+
+	isAnimated(){
+		this.anims.create({
+			key: 'player-run',
+			frames: this.anims.generateFrameNumbers('playerRun', {
+				start: 0, end: 1
+			}),
+			frameRate: 10,
+			repeat: -1
+		});
+
+		this.anims.create({
+			key: 'player-kneel',
+			frames: this.anims.generateFrameNumbers('playerKneel', {
+				start: 0, end: 1}),
+			frameRate: 2,
+			repeat: -1
+		});
+		
+
+		this.anims.create({
+			key: 'enemy-bird',
+			frames: this.anims.generateFrameNumbers('enemyBird', {
+				start: 0, end: 1
+			}),
+			frameRate: 6,
+			repeat: -1
+		});
+	  
+	}
+
+
 
 	isOutOfBounce(){
 		// destroy obstacles if out of bounce
@@ -204,10 +229,10 @@ class Play extends Phaser.Scene{
 			}
 		});
 
-		// destroy obstacles if out of bounce
+		// loop clouds
 		this.addCloud.getChildren().forEach(clouds => {
 			if (clouds.getBounds().right < 0) {
-				clouds.x = this.game.config.width + 30;
+				clouds.x = this.game.config.width + 40;
 			}
 		});
 	}
@@ -216,16 +241,17 @@ class Play extends Phaser.Scene{
 		//running animation
 		if (this.player.body.deltaAbsY() > 0) {		// if jump
 			this.player.anims.stop();				// stop running animation
-			this.player.setTexture('playerRun', 0);	
+			this.player.setTexture('playerRun');	
 		  } else {
 			this.player.body.height <= 29 ? this.player.play('player-kneel', true) : this.player.play('player-run', true); // continue running animation
 		}
 	}
 
+	// respawn obstacle objects
 	isObstacleRespawn(){
 		this.respawnTime += 25 * this.gameSpeed * 0.08;
 		if(this.respawnTime >= 1500) {
-			this.placeObstacle();
+			this.objects();
 			this.respawnTime = 0;
 		}
 	}
@@ -238,7 +264,6 @@ class Play extends Phaser.Scene{
 		Phaser.Actions.IncX(this.addCloud.getChildren(), -0.8);
 
 		this.isObstacleRespawn();
-		
 		this.isOutOfBounce();
 		this.isRunningAnim();
 
