@@ -20,6 +20,8 @@ class Load extends Phaser.Scene {
         this.load.image('tile', 'img/exampleTile.png');
         this.load.image('box', 'img/exampleBox.png');
         this.load.image('player', 'img/examplePlayer2.png');
+        this.load.image('playerDead', 'img/examplePlayerDead.png');
+
 
         this.load.spritesheet('playerRun', 'img/examplePlayer.png', {
             frameWidth: 88,
