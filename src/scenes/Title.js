@@ -4,8 +4,9 @@ class Title extends Phaser.Scene {
 	}
 	
 	create(){
-		this.add.bitmapText(centerX, centerY - 65, 'exampleFont', 'The Annoying Rabbit ', 64).setOrigin(0.5);
-		this.add.bitmapText(centerX, centerY, 'exampleFont', 'No Internet Connection Clone', 64).setOrigin(0.5);
+		this.add.bitmapText(centerX, centerY - 10, 'exampleFont', 'The Annoying Rabbit ', 64).setOrigin(0.5);
+		this.add.bitmapText(centerX, centerY, 'exampleFont', 'The Annoying Rabbit ', 64).setOrigin(0.5);
+		this.add.bitmapText(centerX, centerY + 10, 'exampleFont', 'The Annoying Rabbit ', 64).setOrigin(0.5);
 
 		this.add.bitmapText(centerX, centerY + textSpacer, 'exampleFont', 'Press SPACE to jump, and LEFT/DOWN/RIGHT arrow buttons to dodge obstacles', 24).setOrigin(0.5);
 		this.add.bitmapText(centerX, centerY + textSpacer * 1.5, 'exampleFont', 'Press SPACE to start', 36).setOrigin(0.5);
