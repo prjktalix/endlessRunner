@@ -6,7 +6,7 @@ class Title extends Phaser.Scene {
 	create(){
 		this.add.bitmapText(centerX, centerY, 'exampleFont', 'Title LMFAOOO', 64).setOrigin(0.5);
 
-		this.add.bitmapText(centerX, centerY + textSpacer, 'exampleFont', 'Press SPACE button to dodge <I DUNNO>', 24).setOrigin(0.5);
+		this.add.bitmapText(centerX, centerY + textSpacer, 'exampleFont', 'Press SPACE and DOWN ARROW button to dodge obstacles', 24).setOrigin(0.5);
 		this.add.bitmapText(centerX, centerY + textSpacer * 1.5, 'exampleFont', 'Press SPACE to start', 36).setOrigin(0.5);
         this.add.bitmapText(centerX, centerY + textSpacer * 2, 'exampleFont', 'Brian Camilo 2023', 16).setOrigin(0.5);
 

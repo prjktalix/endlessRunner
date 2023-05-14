@@ -5,17 +5,22 @@ class Play extends Phaser.Scene{
 
 	create(){
 		const {height, width} = this.game.config;
-		this.gameSpeed = 5;
+		this.gameSpeed = 2;
 		this.respawnTime = 0;
 		this.isRunning = false;
 		this.score = 0;
 
+		this.jumpSound = this.sound.add('jump', {volume: 0.2});
+		this.coinSound = this.sound.add('coin', {volume: 0.2});
+		this.hitSound = this.sound.add('hit', {volume: 0.2});
+
 		// create tile ground
 		this.ground = this.add.tileSprite(0, height, width, 26, 'tile').setOrigin(0, 1);
-		this.player = this.physics.add.sprite(0, height, 'player') 
-			.setCollideWorldBounds(true)
-			.setGravityY(5000)
-			.setOrigin(0, 1);  
+		
+		this.player = this.physics.add.sprite(0, height, 'player');
+		this.player.setCollideWorldBounds(true);
+		this.player.setGravityY(5000);
+		this.player.setOrigin(0, 1);  
 
 		this.gameOverText = this.add.bitmapText(centerX, centerY, 'exampleFont', 'GAMEOVER', 24).setOrigin(0.5);
 		this.gameOverText.setAlpha(0);
@@ -39,7 +44,7 @@ class Play extends Phaser.Scene{
 		this.initAnims(); 
 		this.initCollider();
 		this.isScore();
-
+		
 		cursors = this.input.keyboard.createCursorKeys();  
 	}
 
@@ -52,6 +57,10 @@ class Play extends Phaser.Scene{
 				if(!this.isRunning) {return;}
 				this.score++;
 				this.gameSpeed += 0.01;
+
+				if (this.score % 100 === 0){
+					this.coinSound.play();
+				}
 
 				const score = Array.from(String(this.score), Number);
 				for(let i = 0; i < 5 - String(this.score).length; i++){
@@ -76,16 +85,16 @@ class Play extends Phaser.Scene{
 			this.gameOverText.setAlpha(0);
 			this.restart.setAlpha(0);
 
-			this.gameSpeed = 5;
+			this.gameSpeed = 2;
 			
 			this.anims.resumeAll();
 		  });
 
 		if(Phaser.Input.Keyboard.JustDown(cursors.space)){
 			if(!this.player.body.onFloor()){return;}
-
 			this.player.body.height = 94;
 			this.player.body.offset.y = 0;
+			this.jumpSound.play();
 			this.player.setVelocityY(-1600);
 		}
 		if(Phaser.Input.Keyboard.JustDown(cursors.down)){
@@ -166,6 +175,7 @@ class Play extends Phaser.Scene{
 			this.score = 0;
 			this.gameOverText.setAlpha(1);
 			this.restart.setAlpha(1);
+			this.hitSound.play();
 		},null, this);
 		
 	}
@@ -176,7 +186,7 @@ class Play extends Phaser.Scene{
 		Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
 		Phaser.Actions.IncX(this.addCloud.getChildren(), -0.8);
 
-		this.respawnTime += 50 * this.gameSpeed * 0.08;
+		this.respawnTime += 25 * this.gameSpeed * 0.08;
 		if(this.respawnTime >= 1500) {
 			this.placeObstacle();
 			this.respawnTime = 0;
