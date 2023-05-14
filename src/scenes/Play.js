@@ -39,8 +39,8 @@ class Play extends Phaser.Scene{
 		this.restart.setInteractive();
 		this.restart.setAlpha(0); 
 
-		this.scoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
-		this.highScoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
+		this.scoreText = this.add.bitmapText(w - 965,  h - 325, 'exampleFont', '0000', 24).setOrigin(0.5);	
+		this.highScoreText = this.add.bitmapText(w - textSpacer + 10,  h - 325, 'exampleFont', 'HI 0000', 24).setOrigin(0.5);	
 
 		// added clouds
 		this.addCloud = this.add.group();
@@ -64,7 +64,7 @@ class Play extends Phaser.Scene{
 		this.physics.add.collider(this.player, this.obstacles, () =>{
 			
 			// show high score
-			this.highScoreText.x = this.scoreText.x - this.scoreText.width - 30;
+			//this.highScoreText.x = this.scoreText.x - this.scoreText.width - 30;
 			const highScore = this.highScoreText.text.substring(this.highScoreText.text.length - 5);
 			const newScore = Number(this.scoreText.text) > Number(highScore) ? this.scoreText.text : highScore;
 			this.highScoreText.setText('HI ' + newScore);
@@ -92,14 +92,14 @@ class Play extends Phaser.Scene{
 				this.score++;				// increment the score
 				this.gameSpeed += 0.001;	// slwoly increase the gamespeed
 
-				// make sound if reach to 100
-				if (this.score % 100 == 0){
+				// make sound if reach to 500
+				if (this.score % 500 == 0){
 					this.coinSound.play();
 				}
 
 				// shift the 0s
 				const score = Array.from(String(this.score), Number);
-				for(let i = 0; i < 5 - String(this.score).length; i++){
+				for(let i = 0; i < 4 - String(this.score).length; i++){
 					score.unshift(0);
 				}
 
@@ -136,6 +136,7 @@ class Play extends Phaser.Scene{
 		
 		// player move right
 		if(Phaser.Input.Keyboard.JustDown(cursors.right)){
+			this.player.setFlipX(0);
 			this.player.setAccelerationX(500);
 		}
 
@@ -145,6 +146,7 @@ class Play extends Phaser.Scene{
 
 		// player move left
 		if(Phaser.Input.Keyboard.JustDown(cursors.left)){
+			this.player.setFlipX(1);
 			this.player.setAccelerationX(-500);
 		}
 
@@ -231,8 +233,8 @@ class Play extends Phaser.Scene{
 
 		// loop clouds
 		this.addCloud.getChildren().forEach(clouds => {
-			if (clouds.getBounds().right < 0) {
-				clouds.x = this.game.config.width + 40;
+			if (clouds.getBounds().right > 1000) {
+				clouds.x = 0;
 			}
 		});
 	}
@@ -261,7 +263,7 @@ class Play extends Phaser.Scene{
 		this.isInput();
 		
 		Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
-		Phaser.Actions.IncX(this.addCloud.getChildren(), -0.8);
+		Phaser.Actions.IncX(this.addCloud.getChildren(), 0.8);
 
 		this.isObstacleRespawn();
 		this.isOutOfBounce();
