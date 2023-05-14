@@ -25,9 +25,9 @@ class Play extends Phaser.Scene{
 	
 
 		// create tile ground
-		this.ground = this.add.tileSprite(0, height, width, 26, 'tile').setOrigin(0, 1);
-		
-		this.player = this.physics.add.sprite(0, height, 'player');
+		this.ground = this.add.tileSprite(0, height, width, 26, 'mySprite', 'tile').setOrigin(0, 1);		
+
+		this.player = this.physics.add.sprite(0, 0, 'mySprite', 'playerIdle');
 		this.player.setCollideWorldBounds(true);
 		this.player.setGravityY(5000);
 		this.player.setOrigin(0, 1);  
@@ -37,7 +37,7 @@ class Play extends Phaser.Scene{
 		
 		this.restart = this.add.bitmapText(centerX, centerY + textSpacer * .4, 'exampleFont', 'press here to restart', 24).setOrigin(0.5);
 		this.restart.setInteractive();
-		this.restart.setAlpha(0);
+		this.restart.setAlpha(0); 
 
 		this.scoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
 		this.highScoreText = this.add.bitmapText(w - textSpacer + 30,  h - 325, 'exampleFont', '00000', 24).setOrigin(0.5);	
@@ -45,9 +45,9 @@ class Play extends Phaser.Scene{
 		
 		this.addCloud = this.add.group();
 		this.addCloud.addMultiple([
-			this.add.image(width / 2, 170, 'cloud'),
-			this.add.image(width - 80, 80, 'cloud'),
-			this.add.image((width / 1.3), 100, 'cloud')
+			this.add.image(width / 2, 170, 'mySprite', 'cloud'),
+			this.add.image(width - 80, 80, 'mySprite', 'cloud'),
+			this.add.image((width / 1.3), 100, 'mySprite', 'cloud')
 		]);
 
 		this.obstacles = this.physics.add.group();
@@ -90,7 +90,7 @@ class Play extends Phaser.Scene{
 
 		this.restart.on('pointerdown', () => {
 			this.player.setVelocityY(0);
-			this.player.body.height = 92;
+			this.player.body.height = 65;
 			this.player.body.offset.y = 0;
 			this.physics.resume();
 			this.obstacles.clear(true, true);
@@ -105,7 +105,7 @@ class Play extends Phaser.Scene{
 
 		if(Phaser.Input.Keyboard.JustDown(cursors.space)){
 			if(!this.player.body.onFloor()){return;}
-			this.player.body.height = 94;
+			this.player.body.height = 65;
 			this.player.body.offset.y = 0;
 			this.jumpSound.play();
 			this.player.setVelocityY(-1600);
@@ -113,12 +113,12 @@ class Play extends Phaser.Scene{
 		if(Phaser.Input.Keyboard.JustDown(cursors.down)){
 			if(!this.player.body.onFloor() || !this.isRunning){return;}
 
-			this.player.body.height = 58;
+			this.player.body.height = 29;
 			this.player.body.offset.y = 34;
 		}
 
 		if(Phaser.Input.Keyboard.JustUp(cursors.down)){
-			this.player.body.height = 94;
+			this.player.body.height = 65;
 			this.player.body.offset.y = 0;
 		}
 		
@@ -147,26 +147,29 @@ class Play extends Phaser.Scene{
 	}
 
 	initAnims(){
+
+		this.anims.create({
+			key: 'player-kneel',
+			frames: this.anims.generateFrameNumbers('playerRun', {start: 0, end: 1}),
+			frameRate: 2,
+			repeat: -1
+		});
+		
 		this.anims.create({
 			key: 'player-run',
-			frames: this.anims.generateFrameNumbers('playerRun', {start: 2, end: 3}),
+			frames: this.anims.generateFrameNumbers('playerRun', {start: 0, end: 1}),
 			frameRate: 10,
 			repeat: -1
 		});
 
-		this.anims.create({
-			key: 'player-kneel',
-			frames: this.anims.generateFrameNumbers('playerKneel', {start: 0, end: 1}),
-			frameRate: 10,
-			repeat: -1
-		})
+		
 
 		this.anims.create({
 			key: 'enemy-bird',
 			frames: this.anims.generateFrameNumbers('enemyBird', {start: 0, end: 1}),
 			frameRate: 6,
 			repeat: -1
-		})
+		});
 	  
 	}
 
@@ -215,7 +218,7 @@ class Play extends Phaser.Scene{
 			this.player.anims.stop();				// stop running animation
 			this.player.setTexture('playerRun', 0);	
 		  } else {
-			this.player.body.height <= 58 ? this.player.play('player-kneel', true) : this.player.play('player-run', true); // continue running animation
+			this.player.body.height <= 29 ? this.player.play('player-kneel', true) : this.player.play('player-run', true); // continue running animation
 		}
 	}
 

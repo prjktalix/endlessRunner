@@ -16,35 +16,31 @@ class Load extends Phaser.Scene {
 
         this.load.path = "./assets/";
         
-        // load graphics assets
-        this.load.image('tile', 'img/exampleTile.png');
-        this.load.image('box', 'img/exampleBox.png');
-        this.load.image('player', 'img/examplePlayer2.png');
-        this.load.image('playerDead', 'img/examplePlayerDead.png');
-        this.load.image('cloud', 'img/cloud.png');
+        // load sprites objects and player anims
+        this.load.atlas('mySprite', 'img/spritesheet.png', 'img/sprites.json');
+        this.load.image('playerDead', 'img/playerDead.png');
 
-
-        this.load.spritesheet('playerRun', 'img/examplePlayer.png', {
-            frameWidth: 88,
-            frameHeight: 94
+        this.load.spritesheet('playerRun', 'img/PlayerRun.png', {
+            frameWidth: 81,
+            frameHeight: 65
         });
 
-        this.load.spritesheet('playerKneel', 'img/examplePlayerKneel.png', {
-            frameWidth: 118,
-            frameHeight: 94
+        this.load.spritesheet('playerKneel', 'img/PlayerKneel.png', {
+            frameWidth: 50,
+            frameHeight: 67
         });
 
-        this.load.spritesheet('enemyBird', 'img/exampleBird.png', {
-            frameWidth: 92,
-            frameHeight: 77
+        this.load.spritesheet('enemyBird', 'img/enemyBird.png', {
+            frameWidth: 74,
+            frameHeight: 52
         });
 
-        this.load.image('obstacle-1', 'img/exampleCactuses_small_1.png');
-        this.load.image('obstacle-2', 'img/exampleCactuses_small_2.png');
-        this.load.image('obstacle-3', 'img/exampleCactuses_small_3.png');
-        this.load.image('obstacle-4', 'img/exampleCactuses_big_1.png');
-        this.load.image('obstacle-5', 'img/exampleCactuses_big_2.png');
-        this.load.image('obstacle-6', 'img/exampleCactuses_big_3.png');
+        this.load.image('obstacle-1', 'img/flower_small_1.png');
+        this.load.image('obstacle-2', 'img/flower_small_2.png');
+        this.load.image('obstacle-3', 'img/flower_small_3.png');
+        this.load.image('obstacle-4', 'img/tree_big_1.png');
+        this.load.image('obstacle-5', 'img/tree_big_2.png');
+        this.load.image('obstacle-6', 'img/tree_big_3.png');
 
         // load audio assets
         this.load.audio('hit', 'audio/hit.mp3');
@@ -59,6 +55,6 @@ class Load extends Phaser.Scene {
     
     create(){
         // go to Title Scene
-        this.scene.start('titleScene');
+        this.scene.start('playScene');
     }
 } 
