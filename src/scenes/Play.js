@@ -14,6 +14,16 @@ class Play extends Phaser.Scene{
 		this.coinSound = this.sound.add('coin', {volume: 0.2});
 		this.hitSound = this.sound.add('hit', {volume: 0.2});
 
+		// set up audio, play bgm
+		this.bgm = this.sound.add('background', { 
+			mute: false,
+			volume: 0.2,
+			rate: 1,
+			loop: true 
+		});
+		this.bgm.play();
+	
+
 		// create tile ground
 		this.ground = this.add.tileSprite(0, height, width, 26, 'tile').setOrigin(0, 1);
 		
@@ -44,7 +54,10 @@ class Play extends Phaser.Scene{
 		this.initAnims(); 
 		this.initCollider();
 		this.isScore();
-		
+		this.isOutOfBounce();
+		this.isRunningAnim();
+		this.isObstacleRespawn();
+
 		cursors = this.input.keyboard.createCursorKeys();  
 	}
 
@@ -180,22 +193,11 @@ class Play extends Phaser.Scene{
 		
 	}
 
-	update(){
-		this.ground.tilePositionX += this.gameSpeed;
-		this.isInput();
-		Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
-		Phaser.Actions.IncX(this.addCloud.getChildren(), -0.8);
-
-		this.respawnTime += 25 * this.gameSpeed * 0.08;
-		if(this.respawnTime >= 1500) {
-			this.placeObstacle();
-			this.respawnTime = 0;
-		}
-		
+	isOutOfBounce(){
 		// destroy obstacles if out of bounce
 		this.obstacles.getChildren().forEach(obstacle => {
 			if (obstacle.getBounds().right < 0) {
-			  this.obstacles.killAndHide(obstacle);
+			this.obstacles.killAndHide(obstacle);
 			}
 		});
 
@@ -204,8 +206,10 @@ class Play extends Phaser.Scene{
 			if (clouds.getBounds().right < 0) {
 				clouds.x = this.game.config.width + 30;
 			}
-		})
+		});
+	}
 
+	isRunningAnim(){
 		//running animation
 		if (this.player.body.deltaAbsY() > 0) {		// if jump
 			this.player.anims.stop();				// stop running animation
@@ -213,6 +217,27 @@ class Play extends Phaser.Scene{
 		  } else {
 			this.player.body.height <= 58 ? this.player.play('player-kneel', true) : this.player.play('player-run', true); // continue running animation
 		}
+	}
+
+	isObstacleRespawn(){
+		this.respawnTime += 25 * this.gameSpeed * 0.08;
+		if(this.respawnTime >= 1500) {
+			this.placeObstacle();
+			this.respawnTime = 0;
+		}
+	}
+
+	update(){
+		this.ground.tilePositionX += this.gameSpeed;
+		this.isInput();
+		
+		Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
+		Phaser.Actions.IncX(this.addCloud.getChildren(), -0.8);
+
+		this.isObstacleRespawn();
+		
+		this.isOutOfBounce();
+		this.isRunningAnim();
 
 	}
 }

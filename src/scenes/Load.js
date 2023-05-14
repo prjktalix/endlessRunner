@@ -50,6 +50,7 @@ class Load extends Phaser.Scene {
         this.load.audio('hit', 'audio/hit.mp3');
         this.load.audio('coin', 'audio/coin.mp3');
         this.load.audio('jump', 'audio/jump.mp3');
+        this.load.audio('background', 'audio/background.mp3');
 
 
         // load font
