@@ -19,6 +19,8 @@ class Load extends Phaser.Scene {
         // load graphics assets
         this.load.image('tile', 'img/exampleTile.png');
         this.load.image('box', 'img/exampleBox.png');
+        this.load.image('player2', 'img/examplePlayer2.png');
+
         this.load.spritesheet('player', 'img/examplePlayer.png', {
             frameWidth: 88,
             frameHeight: 94
