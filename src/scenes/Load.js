@@ -30,6 +30,20 @@ class Load extends Phaser.Scene {
             frameWidth: 118,
             frameHeight: 94
         });
+
+        this.load.spritesheet('enemyBird', 'img/exampleBird.png', {
+            frameWidth: 92,
+            frameHeight: 77
+        });
+
+        this.load.image('obstacle-1', 'img/exampleCactuses_small_1.png');
+        this.load.image('obstacle-2', 'img/exampleCactuses_small_2.png');
+        this.load.image('obstacle-3', 'img/exampleCactuses_small_3.png');
+        this.load.image('obstacle-4', 'img/exampleCactuses_big_1.png');
+        this.load.image('obstacle-5', 'img/exampleCactuses_big_2.png');
+        this.load.image('obstacle-6', 'img/exampleCactuses_big_3.png');
+
+
         // load font
         this.load.bitmapFont('exampleFont', './font/gem.png', './font/gem.xml');
     }
