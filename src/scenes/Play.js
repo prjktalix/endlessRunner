@@ -33,6 +33,7 @@ class Play extends Phaser.Scene{
 		this.player.setOrigin(0, 1);  
 
 		this.gameOverText = this.add.bitmapText(centerX, centerY, 'exampleFont', 'GAMEOVER', 24).setOrigin(0.5);
+		this.gameOverText.setInteractive();
 		this.gameOverText.setAlpha(0);
 		
 		this.restart = this.add.bitmapText(centerX, centerY + textSpacer * .4, 'exampleFont', 'press here to restart', 24).setOrigin(0.5);
@@ -64,7 +65,6 @@ class Play extends Phaser.Scene{
 		this.physics.add.collider(this.player, this.obstacles, () =>{
 			
 			// show high score
-			//this.highScoreText.x = this.scoreText.x - this.scoreText.width - 30;
 			const highScore = this.highScoreText.text.substring(this.highScoreText.text.length - 5);
 			const newScore = Number(this.scoreText.text) > Number(highScore) ? this.scoreText.text : highScore;
 			this.highScoreText.setText('HI ' + newScore);
